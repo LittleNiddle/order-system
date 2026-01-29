@@ -1,9 +1,12 @@
 package com.beyond.order_system.member.domain;
 
+import com.beyond.order_system.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,4 +27,7 @@ public class Member {
     private Role role = Role.USER;
     @Builder.Default
     private LocalDateTime createdTime = LocalDateTime.now();
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Product> productList = new ArrayList<>();
 }
