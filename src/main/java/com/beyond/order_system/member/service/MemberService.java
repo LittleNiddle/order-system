@@ -2,13 +2,17 @@ package com.beyond.order_system.member.service;
 
 import com.beyond.order_system.member.domain.Member;
 import com.beyond.order_system.member.dto.MemberCreateReqDto;
+import com.beyond.order_system.member.dto.MemberDetailResDto;
+import com.beyond.order_system.member.dto.MemberListResDto;
 import com.beyond.order_system.member.dto.MemberLoginReqDto;
 import com.beyond.order_system.member.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -47,4 +51,15 @@ public class MemberService {
         return optionalMember.get();
     }
 
+    public List<MemberListResDto> findAll(){
+        return memberRepository.findAll().stream().map(MemberListResDto::fromEntity).toList();
+    }
+
+    public MemberDetailResDto findMyInfo(String email){
+        return MemberDetailResDto.fromEntity(memberRepository.findByEmail(email).orElseThrow(()->new NoSuchElementException("내 정보가 없습니다")));
+    }
+
+    public MemberDetailResDto findById(Long id){
+        return MemberDetailResDto.fromEntity(memberRepository.findById(id).orElseThrow(()->new NoSuchElementException("해당 id가 없습니다")));
+    }
 }
