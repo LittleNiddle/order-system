@@ -44,11 +44,13 @@ public class ProductService {
         this.s3Client = s3Client;
     }
 
-    public Product create(ProductCreateReqDto dto, MultipartFile productImage, String email){
+    public Long create(ProductCreateReqDto dto, String email){
+        // repository 에서 error를 터뜨릴 수도 있다.
         Member member = memberRepository.findByEmail(email).orElseThrow(()->new NoSuchElementException("등록된 이메일이 없습니다."));
         Product product = dto.toEntity(member);
         Product productDb = productRepository.save(product);
-
+        // multipart list??
+        MultipartFile productImage = dto.getProductImage();
         if(productImage != null) {
             String filename = "product-" + product.getId() + "-productImage-" + productImage.getOriginalFilename();
             PutObjectRequest request = PutObjectRequest.builder()
@@ -66,7 +68,7 @@ public class ProductService {
             String imageUrl = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(filename)).toExternalForm();
             product.updateProfileImageUrl(imageUrl);
         }
-        return productDb;
+        return productDb.getId();
     }
 
     public ProductDetailResDto findById(Long id){
@@ -79,7 +81,7 @@ public class ProductService {
             public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicateList = new ArrayList<>();
                 if(searchDto.getName()!=null) {
-                    predicateList.add(criteriaBuilder.like(root.get("title"), "%"+searchDto.getName()+"%"));
+                    predicateList.add(criteriaBuilder.like(root.get("name"), "%"+searchDto.getName()+"%"));
                 }
                 if(searchDto.getCategory()!=null) {
                     predicateList.add(criteriaBuilder.equal(root.get("category"), searchDto.getCategory()));

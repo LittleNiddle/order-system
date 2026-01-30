@@ -1,12 +1,11 @@
 package com.beyond.order_system.member.service;
 
 import com.beyond.order_system.member.domain.Member;
-import com.beyond.order_system.member.dto.MemberCreateReqDto;
-import com.beyond.order_system.member.dto.MemberDetailResDto;
-import com.beyond.order_system.member.dto.MemberListResDto;
-import com.beyond.order_system.member.dto.MemberLoginReqDto;
+import com.beyond.order_system.member.dtos.MemberCreateReqDto;
+import com.beyond.order_system.member.dtos.MemberDetailResDto;
+import com.beyond.order_system.member.dtos.MemberListResDto;
+import com.beyond.order_system.member.dtos.MemberLoginReqDto;
 import com.beyond.order_system.member.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,14 +26,14 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Member create(MemberCreateReqDto dto){
+    public Long create(MemberCreateReqDto dto){
         if(memberRepository.findByEmail(dto.getEmail()).isPresent()){
             throw new IllegalArgumentException("중복되는 이메일 입니다.");
         }
 
         Member member = dto.toEntity(passwordEncoder.encode(dto.getPassword()));
         memberRepository.save(member);
-        return member;
+        return member.getId();
     }
 
     public Member login(MemberLoginReqDto dto){

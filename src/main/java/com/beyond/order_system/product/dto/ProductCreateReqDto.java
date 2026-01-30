@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class ProductCreateReqDto {
     private int price;
     private String category;
     private int stockQuantity;
+    private MultipartFile productImage;
 
     public Product toEntity(Member member){
         return Product.builder()

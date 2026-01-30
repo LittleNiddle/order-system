@@ -35,6 +35,6 @@ public class JwtAuthenticationHandler implements AuthenticationEntryPoint {
         String data = objectMapper.writeValueAsString(dto);
         PrintWriter printWriter = response.getWriter();
         printWriter.write(data);
-        printWriter.flush(); // 메모
+        printWriter.flush();
     }
 }

@@ -1,9 +1,8 @@
 package com.beyond.order_system.ordering.controller;
 
-import com.beyond.order_system.ordering.domain.Ordering;
-import com.beyond.order_system.ordering.dto.OrderingCreateListReqDto;
-import com.beyond.order_system.ordering.dto.OrderingDetailListResDto;
-import com.beyond.order_system.ordering.dto.OrderingDetailResDto;
+import com.beyond.order_system.ordering.dtos.OrderCreateDto;
+import com.beyond.order_system.ordering.dtos.OrderListDto;
+import com.beyond.order_system.ordering.dtos.OrderDetailDto;
 import com.beyond.order_system.ordering.servicec.OrderingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,21 +23,21 @@ public class OrderingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody List<OrderingCreateListReqDto> listReqDtoList){
-        Ordering ordering = orderingService.create(listReqDtoList);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ordering.getId());
+    public ResponseEntity<?> create(@RequestBody List<OrderCreateDto> listReqDtoList){
+        Long id = orderingService.create(listReqDtoList);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(){
-        List<OrderingDetailListResDto> dtoList = orderingService.findAll();
+        List<OrderListDto> dtoList = orderingService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 
     @GetMapping("/myorders")
-    public ResponseEntity<?> findMyInfo(@AuthenticationPrincipal String principal){
-        List<OrderingDetailResDto> dtoList = orderingService.findMyInfo(principal);
+    public ResponseEntity<?> myOrders(@AuthenticationPrincipal String principal){
+        List<OrderListDto> dtoList = orderingService.myOrders(principal);
         return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 }

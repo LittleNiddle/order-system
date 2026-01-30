@@ -1,4 +1,4 @@
-package com.beyond.order_system.member.dto;
+package com.beyond.order_system.member.dtos;
 
 import com.beyond.order_system.member.domain.Member;
 import jakarta.validation.constraints.NotBlank;

@@ -65,8 +65,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<?> exception(Exception e){ // 에러 주입됨
+    public ResponseEntity<?> exception(Exception e){
         e.printStackTrace();
         CommonErrorDto dto = CommonErrorDto.builder()
                 .status_code(500)

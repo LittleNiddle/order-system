@@ -35,10 +35,9 @@ public class ProductController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@ModelAttribute ProductCreateReqDto dto,
-                                    @RequestParam(value="productImage")MultipartFile productImage,
                                     @AuthenticationPrincipal String principal){
-        Product product = productService.create(dto, productImage, principal);
-        return ResponseEntity.status(HttpStatus.OK).body(product.getId());
+        Long id = productService.create(dto, principal);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
     @GetMapping("/detail/{id}")
@@ -48,8 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> findAll(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                     @ModelAttribute ProductSearchReqDto searchDto){
+    public ResponseEntity<?> findAll(Pageable pageable, ProductSearchReqDto searchDto){
         Page<ProductListResDto> productListResDtoList = productService.findAll(searchDto, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(productListResDtoList);
     }

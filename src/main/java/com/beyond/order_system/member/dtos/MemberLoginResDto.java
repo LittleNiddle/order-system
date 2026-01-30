@@ -1,4 +1,4 @@
-package com.beyond.order_system.member.dto;
+package com.beyond.order_system.member.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.Data;
 @NotBlank
 @Data
 @Builder
-public class TokenResDto {
+public class MemberLoginResDto {
     private String accessToken;
     private String refreshToken;
 }

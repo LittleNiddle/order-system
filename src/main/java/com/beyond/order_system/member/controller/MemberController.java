@@ -2,7 +2,7 @@ package com.beyond.order_system.member.controller;
 
 import com.beyond.order_system.common.auth.JwtTokenProvider;
 import com.beyond.order_system.member.domain.Member;
-import com.beyond.order_system.member.dto.*;
+import com.beyond.order_system.member.dtos.*;
 import com.beyond.order_system.member.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,19 +29,22 @@ public class MemberController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid MemberCreateReqDto dto){
-        Member member = memberService.create(dto);
-        return ResponseEntity.status(HttpStatus.OK).body(member.getId());
+        Long id = memberService.create(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
     @PostMapping("/doLogin")
     public ResponseEntity<?> doLogin(@RequestBody MemberLoginReqDto dto){
         Member member = memberService.login(dto);
-        TokenResDto token = TokenResDto.builder()
+//        refresh token 생성
+        MemberLoginResDto memberLoginResDto = MemberLoginResDto.builder()
                 .accessToken(jwtTokenProvider.createToken(member))
+                .refreshToken(null)
                 .build();
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+        return ResponseEntity.status(HttpStatus.OK).body(memberLoginResDto);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(){
@@ -57,7 +61,7 @@ public class MemberController {
 
     @GetMapping("/detail/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> findMyInfo(@PathVariable("id") Long id){
+    public ResponseEntity<?> findById(@PathVariable("id") Long id){
         MemberDetailResDto memberDetailResDto = memberService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(memberDetailResDto);
     }

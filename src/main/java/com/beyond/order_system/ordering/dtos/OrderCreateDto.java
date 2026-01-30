@@ -1,7 +1,7 @@
-package com.beyond.order_system.ordering.dto;
+package com.beyond.order_system.ordering.dtos;
 
 import com.beyond.order_system.ordering.domain.Ordering;
-import com.beyond.order_system.ordering.domain.OrderingDetail;
+import com.beyond.order_system.ordering.domain.OrderDetail;
 import com.beyond.order_system.product.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class OrderingCreateListReqDto {
+public class OrderCreateDto {
     private Long productId;
     private int productCount;
 
-    public OrderingDetail toEntity(Ordering ordering, Product product){
-        return OrderingDetail.builder()
-                .order(ordering)
+    public OrderDetail toEntity(Ordering ordering, Product product){
+        return OrderDetail.builder()
+                .ordering(ordering)
                 .product(product)
                 .quantity(this.productCount)
                 .build();

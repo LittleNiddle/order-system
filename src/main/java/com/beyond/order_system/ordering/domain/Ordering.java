@@ -24,12 +24,13 @@ public class Ordering extends BaseTimeEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    @Builder.Default
+    private OrderStatus orderStatus = OrderStatus.ORDERED;
 
     @Builder.Default
     private LocalDateTime createdTime = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ordering", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<OrderingDetail> orderingDetailList = new ArrayList<>();
+    private List<OrderDetail> orderDetailList = new ArrayList<>();
 }

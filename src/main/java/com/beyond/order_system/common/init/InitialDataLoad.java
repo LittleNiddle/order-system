@@ -24,6 +24,7 @@ public class InitialDataLoad implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (memberRepository.findByEmail("admin@naver.com").isPresent()) return;
         memberRepository.save(Member.builder()
+                .name("admin")
                 .email("admin@naver.com")
                 .role(Role.ADMIN)
                 .password(passwordEncoder.encode("12341234"))
